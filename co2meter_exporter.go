@@ -94,7 +94,7 @@ func isValidReading(buffer []byte) bool {
 		return false
 	}
 
-	return true
+	return false
 }
 
 func hidSetReport(source *os.File, key []byte) {
