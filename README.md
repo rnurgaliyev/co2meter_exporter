@@ -17,6 +17,15 @@ All of them look more or less same and don't cost too much. Some of them will al
 
 It is best to power this device via Raspberry Pi in-the-middle, so no extra power supply is needed.
 
+## Running in a docker container
+
+Raspberry Pi and docker are great friends. Just run docker container and you will have Prometheus exporter
+at no cost!
+
+```
+docker run -dt -p 2112:2112/tcp --name co2meter_exporter --restart unless-stopped --privileged imple/co2meter_exporter:latest
+```
+
 ## Downloading and building for ARMv7 (Raspberry Pi 2 and newer)
 
 ```
