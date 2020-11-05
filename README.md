@@ -12,7 +12,7 @@ All devices that report as USB-zyTemp should in theory be supported.
 Bus 001 Device 004: ID 04d9:a052 Holtek Semiconductor, Inc. USB-zyTemp
 ```
 
-I've played with [this](https://www.wetterladen.de/aircontrol-co2-monitor-mini-tfa-31.5006) one.
+I've played with [this](https://www.wetterladen.de/aircontrol-mini-co2-messgeraet-tfa-31.5006-plus-incl-stecker-netzteil-raumklimakontrolle) one.
 All of them look more or less same and don't cost too much. Some of them will also report humidity, most will not.
 
 It is best to power this device via Raspberry Pi in-the-middle, so no extra power supply is needed.
