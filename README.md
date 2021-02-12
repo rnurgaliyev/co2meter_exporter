@@ -42,11 +42,11 @@ Transfer binary to your Raspberry Pi and you are ready to go.
 co2meter_exporter
 
   Flags:
-    -h --help      Displays help with available flag, subcommand, and positional value parameters.
-    -d --device    Device to get readings from
-    -b --bind      Address to listen on (default: 0.0.0.0)
-    -p --port      Port number to listen on (default: 9200)
-
+    -h --help             Displays help with available flag, subcommand, and positional value parameters.
+    -d --device           Device to get readings from
+    -b --bind             Address to listen on (default: 0.0.0.0)
+    -p --port             Port number to listen on (default: 9200)
+       --skipDecryption   Skip value decryption. This is needed for some CO2 meter models.
 
 ~ ./co2monitor -d /dev/hidraw0 -p 2112
 2020/02/03 19:07:46 Listening on http://0.0.0.0:2112/metrics
