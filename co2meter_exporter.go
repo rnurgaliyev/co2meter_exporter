@@ -119,7 +119,7 @@ func hidSetReport(source *os.File, key []byte) {
 	}
 }
 
-func getReadings(source *os.File, key []byte, s *envState) {
+func getReadings(source *os.File, key []byte, s *envState, skipDecryption bool) {
 	buffer := make([]byte, 8)
 
 	for {
@@ -129,16 +129,22 @@ func getReadings(source *os.File, key []byte, s *envState) {
 			log.Fatal(err)
 		}
 
-		// Data from device is always coming in encrypted form
-		decrypted := decryptReading(buffer, key)
+		var code byte
+		var value int
+		if skipDecryption {
+			code = buffer[0]
+			value = int(binary.BigEndian.Uint16(buffer[1:3]))
+		} else {
+			decrypted := decryptReading(buffer, key)
 
-		if !isValidReading(decrypted) {
-			log.Println("Data decryption failed: ", decrypted)
-			break
+			if !isValidReading(decrypted) {
+				log.Println("Data decryption failed: ", decrypted)
+				break
+			}
+
+			code = decrypted[0]
+			value = int(binary.BigEndian.Uint16(decrypted[1:3]))
 		}
-
-		code := decrypted[0]
-		value := int(binary.BigEndian.Uint16(decrypted[1:3]))
 
 		switch code {
 		case 0x50:
@@ -186,10 +192,12 @@ func main() {
 	var deviceFlag = ""
 	var bindFlag = "0.0.0.0"
 	var portFlag = 9200
+	var skipDecryptionFlag bool
 
 	flaggy.String(&deviceFlag, "d", "device", "Device to get readings from")
 	flaggy.String(&bindFlag, "b", "bind", "Address to listen on")
 	flaggy.Int(&portFlag, "p", "port", "Port number to listen on")
+	flaggy.Bool(&skipDecryptionFlag, "", "skipDecryption", "Skip value decryption. This is needed for some CO2 meter models.")
 	flaggy.DefaultParser.DisableShowVersionWithVersion()
 	flaggy.Parse()
 
@@ -210,7 +218,7 @@ func main() {
 
 	hidSetReport(source, key[:])
 
-	go getReadings(source, key[:], &state)
+	go getReadings(source, key[:], &state, skipDecryptionFlag)
 	go logMetrics(&state)
 
 	log.Printf("Listening on http://%s:%d/metrics\n", bindFlag, portFlag)
