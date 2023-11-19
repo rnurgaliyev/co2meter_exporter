@@ -1,5 +1,6 @@
 FROM golang:latest AS builder
-RUN GOBIN=/ go install github.com/rnurgaliyev/co2meter_exporter@latest
+RUN GOBIN=/ CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=7 \
+    go install github.com/rnurgaliyev/co2meter_exporter@latest
 
 FROM arm32v7/alpine:latest
 COPY --from=builder /co2meter_exporter /bin/co2meter_exporter
